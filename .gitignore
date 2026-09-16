@@ -1,0 +1,8 @@
+build/
+install/
+log/
+.vscode/
+*.pyc
+__pycache__/
+.DS_Store
+MTRN4231_Assignment.pdf

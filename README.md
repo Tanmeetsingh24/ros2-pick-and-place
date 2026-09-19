@@ -1,35 +1,35 @@
-> **Public case study** — UNSW MTRN4231 coursework snapshot. Assignment PDFs not included.
+> **Public case study.** UNSW MTRN4231 coursework snapshot. Assignment PDFs not included.
 
 ---
 
 ## Problem statement
 
-The course needed a **multi-node robot cell** that still made sense when the camera and arm were **simulated** — the learning target was architecture and interfaces, not tuning a single monolithic script.
+The course needed a **multi-node robot cell** that still made sense when the camera and arm were **simulated**. the learning target was architecture and interfaces, not tuning a single monolithic script.
 
 ## High-level impact
 
-- **ROS 2** workspace with **Perception, Brain, Inventory, Arm** roles and shared **interfaces** package.
-- **TF-backed** spatial model for items, slots, and arm/camera frames.
-- Operator **put/get/pick** flows via services, not ad hoc topic spaghetti.
+1. **ROS 2** workspace with **Perception, Brain, Inventory, Arm** roles and shared **interfaces** package.
+2. **TF-backed** spatial model for items, slots, and arm/camera frames.
+3. Operator **put/get/pick** flows via services, not ad hoc topic spaghetti.
 
 ## My contribution
 
-- Designed and implemented the **brain coordinator**, **inventory node**, and **perception** pipeline for the simulated cell.
-- Defined **custom messages/services** and launch/bring-up flow for integrated demos.
-- Documented cell behaviour for course submission and portfolio.
+1. Designed and implemented the **brain coordinator**, **inventory node**, and **perception** pipeline for the simulated cell.
+2. Defined **custom messages/services** and launch/bring-up flow for integrated demos.
+3. Documented cell behaviour for course submission and portfolio.
 
 ## Tech and design choices
 
 | Choice | Why |
 | --- | --- |
 | **ROS 2 services for commands** | Put/get/pick need acknowledgement; topics alone hide failure modes. |
-| **Separate `interfaces` package** | One schema change propagates cleanly — mirrors real integrator workflows. |
+| **Separate `interfaces` package** | One schema change propagates cleanly. mirrors real integrator workflows. |
 | **Simulated arm latency** | Exercises async client logic without lab hardware contention. |
 | **TF for all spatial relationships** | RViz-visible cell; avoids hard-coded poses in every node. |
 
-## Lesson / twist
+## Lesson
 
-**Race conditions** appeared when perception published faster than inventory updated — fixed by making the **brain** the sole orchestrator for pick/place sequences and tightening service call ordering instead of letting multiple nodes infer state from topics independently.
+**Race conditions** appeared when perception published faster than inventory updated. Fixed by making the **brain** the sole orchestrator for pick/place sequences and tightening service call ordering instead of letting multiple nodes infer state from topics independently.
 
 ---
 
@@ -37,7 +37,7 @@ The course needed a **multi-node robot cell** that still made sense when the cam
 
 A small factory cell in software: detect an item, decide what to do with it, park it in inventory, or send the arm to fetch it again.
 
-Built for **UNSW MTRN4231** (Robotics, 2024 T3) as a multi-package **ROS 2** workspace. Camera detections and arm motion are **simulated** so the focus stays on architecture, interfaces, and coordination — the same patterns you need when the hardware is real.
+Built for **UNSW MTRN4231** (Robotics, 2024 T3) as a multi-package **ROS 2** workspace. Camera detections and arm motion are **simulated** so the focus stays on architecture, interfaces, and coordination. the same patterns you need when the hardware is real.
 
 Public snapshot of my classroom solution. Course assignment PDFs are not included.
 
@@ -66,7 +66,7 @@ Think of four roles talking over ROS topics and services:
 3. **Inventory** is a three-slot shelf in memory (`-1` = empty).  
    Put/get requests return the slot number (or failure). Slot state is published on a timer as `InventoryStatus`. Static TFs place `inventory_slot_1..3` relative to `base_link`.
 
-4. **Arm** (provided simulator) accepts `ArmMovement` requests with a command and pose, sleeps for a few seconds, then returns `success`. No real kinematics — just a stand-in for motion time.
+4. **Arm** (provided simulator) accepts `ArmMovement` requests with a command and pose, sleeps for a few seconds, then returns `success`. No real kinematics. just a stand-in for motion time.
 
 Underneath, **TF** holds the cell together: `map` → `base_link` → `arm_link` / `camera_link` / inventory slots, plus dynamic frames for whatever the camera last saw. That is what you would open in RViz to see the scene.
 
@@ -98,7 +98,7 @@ place request →  Brain calls Inventory "put in inventory"
               →  InventoryStatus shows which slot filled
 ```
 
-Perception keeps feeding the brain a rolling view of what has been “seen,” so the coordinator can react when something new appears — without embedding camera logic inside the arm or inventory nodes.
+Perception keeps feeding the brain a rolling view of what has been “seen,” so the coordinator can react when something new appears. without embedding camera logic inside the arm or inventory nodes.
 
 ---
 
@@ -106,10 +106,10 @@ Perception keeps feeding the brain a rolling view of what has been “seen,” s
 
 ROS pays off when each concern is a node with a clear contract:
 
-- **Interfaces first** — change a message once; every package stays compatible  
-- **Services for actions** — put/get/pick are request–response, not fire-and-forget topics  
-- **Topics for status** — inventory and perception broadcast what they know on a timer  
-- **TF for space** — slots, camera, and items share one frame tree instead of hard-coded magic numbers in every file  
+1. **Interfaces first**. change a message once; every package stays compatible  
+2. **Services for actions**. put/get/pick are request–response, not fire-and-forget topics  
+3. **Topics for status**. inventory and perception broadcast what they know on a timer  
+4. **TF for space**. slots, camera, and items share one frame tree instead of hard-coded magic numbers in every file  
 
 That is the same habit you want on a real cell: swap a camera driver or a real arm driver later, keep the brain and inventory contracts.
 

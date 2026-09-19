@@ -4,7 +4,7 @@
 
 ## Problem statement
 
-The course needed a **multi-node robot cell** that still made sense when the camera and arm were **simulated**. the learning target was architecture and interfaces, not tuning a single monolithic script.
+The course needed a **multi-node robot cell** that still made sense when the camera and arm were **simulated**. The learning target was architecture and interfaces, not tuning a single monolithic script.
 
 ## High-level impact
 
@@ -23,7 +23,7 @@ The course needed a **multi-node robot cell** that still made sense when the cam
 | Choice | Why |
 | --- | --- |
 | **ROS 2 services for commands** | Put/get/pick need acknowledgement; topics alone hide failure modes. |
-| **Separate `interfaces` package** | One schema change propagates cleanly. mirrors real integrator workflows. |
+| **Separate `interfaces` package** | One schema change propagates cleanly; mirrors real integrator workflows. |
 | **Simulated arm latency** | Exercises async client logic without lab hardware contention. |
 | **TF for all spatial relationships** | RViz-visible cell; avoids hard-coded poses in every node. |
 
@@ -37,7 +37,7 @@ The course needed a **multi-node robot cell** that still made sense when the cam
 
 A small factory cell in software: detect an item, decide what to do with it, park it in inventory, or send the arm to fetch it again.
 
-Built for **UNSW MTRN4231** (Robotics, 2024 T3) as a multi-package **ROS 2** workspace. Camera detections and arm motion are **simulated** so the focus stays on architecture, interfaces, and coordination. the same patterns you need when the hardware is real.
+Built for **UNSW MTRN4231** (Robotics, 2024 T3) as a multi-package **ROS 2** workspace. Camera detections and arm motion are **simulated** so the focus stays on architecture, interfaces, and coordination. The same patterns you need when the hardware is real.
 
 Public snapshot of my classroom solution. Course assignment PDFs are not included.
 

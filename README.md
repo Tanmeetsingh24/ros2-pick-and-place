@@ -2,7 +2,7 @@
 
 ---
 
-## The hook
+## Problem statement
 
 The course needed a **multi-node robot cell** that still made sense when the camera and arm were **simulated** — the learning target was architecture and interfaces, not tuning a single monolithic script.
 

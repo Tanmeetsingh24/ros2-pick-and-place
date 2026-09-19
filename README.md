@@ -1,3 +1,38 @@
+> **Public case study** — UNSW MTRN4231 coursework snapshot. Assignment PDFs not included.
+
+---
+
+## The hook
+
+The course needed a **multi-node robot cell** that still made sense when the camera and arm were **simulated** — the learning target was architecture and interfaces, not tuning a single monolithic script.
+
+## High-level impact
+
+- **ROS 2** workspace with **Perception, Brain, Inventory, Arm** roles and shared **interfaces** package.
+- **TF-backed** spatial model for items, slots, and arm/camera frames.
+- Operator **put/get/pick** flows via services, not ad hoc topic spaghetti.
+
+## My contribution
+
+- Designed and implemented the **brain coordinator**, **inventory node**, and **perception** pipeline for the simulated cell.
+- Defined **custom messages/services** and launch/bring-up flow for integrated demos.
+- Documented cell behaviour for course submission and portfolio.
+
+## Tech and design choices
+
+| Choice | Why |
+| --- | --- |
+| **ROS 2 services for commands** | Put/get/pick need acknowledgement; topics alone hide failure modes. |
+| **Separate `interfaces` package** | One schema change propagates cleanly — mirrors real integrator workflows. |
+| **Simulated arm latency** | Exercises async client logic without lab hardware contention. |
+| **TF for all spatial relationships** | RViz-visible cell; avoids hard-coded poses in every node. |
+
+## Lesson / twist
+
+**Race conditions** appeared when perception published faster than inventory updated — fixed by making the **brain** the sole orchestrator for pick/place sequences and tightening service call ordering instead of letting multiple nodes infer state from topics independently.
+
+---
+
 # ROS 2 pick-and-place cell
 
 A small factory cell in software: detect an item, decide what to do with it, park it in inventory, or send the arm to fetch it again.
